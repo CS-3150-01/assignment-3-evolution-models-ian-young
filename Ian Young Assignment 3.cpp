@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -9,31 +10,45 @@ class Customer {
         int invoice;
         bool receipt;
         string name;
-    public:
-        string getName() {
-            return name;
-        };
+        Cart custCart;
+
         void printReceipt() {
             if(receipt) {
                 cout << "Please grab your receipt below.";
             }
         };
-        void finalizeTransaction(Order order) {
-            cout << "Your total has come to: " << order.calcTotal();
+
+    public:
+        string getName() {
+            return name;
         };
+
+        void finalizeTransaction(Order order) {
+            cout << "Your total has come to: " << order.calcTotal(custCart.calcSubTotal(), 7);
+            printReceipt();
+        };
+
+        Cart getCart() {
+            return custCart;
+        }
 };
 
 
 class Cart {
     private: 
         int subTotal;
-        Product items[];
+        vector<Product> items;
     public:
-        int calcSubTotal(Product item) {
-
+        int calcSubTotal() {
+            int subTotal;
+            for (int i = 0; i < items.size(); i++) {
+                subTotal += items[i].getPrice();
+            }
+            return subTotal;
         };
-        void printSubTotal() {
 
+        void printSubTotal() {
+            cout << "The subtotal is: " << calcSubTotal();
         };
 };
 
@@ -42,9 +57,11 @@ class Order {
     private:
         string date;
     public:
-        int calcTotal() {
-
+        int calcTotal(int subTotal, int tax) {
+            int total = (subTotal * tax/10) + subTotal;
+            return total;
         };
+
         string getDate() {
             return date;
         };
@@ -53,16 +70,29 @@ class Order {
 
 class Inventory {
     private:
-        int quantity;
+        int quantity = 0;
+        vector<Product> stock;
     public:
         int getQuantity() {
             return quantity;
         };
+
         void setQuantity(int quan) {
             quantity = quan;
         };
+
         void updateInventory(Product items[]) {
 
+        };
+
+        vector<Product> getInventory() {
+            return stock;
+        };
+
+        void updateInventory(vector<Product> newItems) {
+            for (int i = 0; i < newItems.size(); i++) {
+                stock.push_back(newItems[i]);
+            }
         };
 };
 
@@ -77,12 +107,15 @@ class Product {
         string getName() {
             return name;
         };
+
         int getPrice() {
             return price;
         };
+
         int getQuantity() {
             return quantity;
         };
+
         void setQuantity(int quan) {
             quantity = quan;
         };
@@ -120,7 +153,6 @@ class Orange : Product{
 
 
 int main() {
-
 
     return 0;
 }
