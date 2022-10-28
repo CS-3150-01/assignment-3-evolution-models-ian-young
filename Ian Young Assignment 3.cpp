@@ -11,6 +11,7 @@ class Customer {
         bool receipt;
         string name;
         Cart custCart;
+        vector<Order> orders;
 
         void printReceipt() {
             if(receipt) {
@@ -30,6 +31,10 @@ class Customer {
 
         Cart getCart() {
             return custCart;
+        };
+
+        vector<Order> getOrders() {
+            return orders;
         }
 };
 
